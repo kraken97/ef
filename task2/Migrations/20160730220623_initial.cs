@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace task2.Migrations
 {
-    public partial class initial1 : Migration
+    public partial class initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -56,23 +56,21 @@ namespace task2.Migrations
                 name: "RelatedPages",
                 columns: table => new
                 {
-                    RelatedPageId = table.Column<int>(nullable: false)
-                        .Annotation("Autoincrement", true),
-                    Page1ID = table.Column<int>(nullable: false),
-                    Page2ID = table.Column<int>(nullable: false)
+                    Page1Id = table.Column<int>(nullable: false),
+                    Page2Id = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_RelatedPages", x => x.RelatedPageId);
+                    table.PrimaryKey("PK_RelatedPages", x => new { x.Page1Id, x.Page2Id });
                     table.ForeignKey(
-                        name: "FK_RelatedPages_Pages_Page1ID",
-                        column: x => x.Page1ID,
+                        name: "FK_RelatedPages_Pages_Page1Id",
+                        column: x => x.Page1Id,
                         principalTable: "Pages",
                         principalColumn: "PageId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_RelatedPages_Pages_Page2ID",
-                        column: x => x.Page2ID,
+                        name: "FK_RelatedPages_Pages_Page2Id",
+                        column: x => x.Page2Id,
                         principalTable: "Pages",
                         principalColumn: "PageId",
                         onDelete: ReferentialAction.Cascade);
@@ -89,14 +87,14 @@ namespace task2.Migrations
                 column: "ParentLinkID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_RelatedPages_Page1ID",
+                name: "IX_RelatedPages_Page1Id",
                 table: "RelatedPages",
-                column: "Page1ID");
+                column: "Page1Id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_RelatedPages_Page2ID",
+                name: "IX_RelatedPages_Page2Id",
                 table: "RelatedPages",
-                column: "Page2ID");
+                column: "Page2Id");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
