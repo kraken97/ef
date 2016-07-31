@@ -26,15 +26,19 @@ namespace DatabaseApplication
                 case pages:
                     var page = Utils.ParseJson<Page>(this.Json);
                     this.connection.Pages.Add(page);
-                    System.Console.WriteLine(page);
+                    System.Console.WriteLine("Page ID:"+this.connection.Pages.Last().PageId);
+
                     break;
                 case navlinks:
                     var nav = Utils.ParseJson<NavLink>(this.Json);
                     this.connection.NavLinks.Add(nav);
+                    System.Console.WriteLine(" NavLink:"+this.connection.NavLinks.Last().NavLinkId);
+                    
                     break;
                 case relatedpages:
                     var relpages = Utils.ParseJson<RelatedPage>(this.Json);
                     this.connection.RelatedPages.Add(relpages);
+                    System.Console.WriteLine("relatedpages :"+this.connection.RelatedPages.Last());
                     break;
                 default:
                     throw new InvalidOperationException("no such database  in list [page,navlink,relatedpages]");
