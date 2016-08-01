@@ -73,7 +73,6 @@ namespace DatabaseApplication
         }
         protected override void OnModelCreating(ModelBuilder mb)
         {
-            mb.Entity<NavLink>().HasIndex(link=>link.Page).IsUnique();
             mb.Entity<Page>().Property(e => e.AddedDate).HasDefaultValueSql("strftime('%Y-%m-%d %H:%M:%S')").ValueGeneratedOnAdd();
             mb.Entity<RelatedPage>().HasKey(r => new { r.Page1Id, r.Page2Id });
 
