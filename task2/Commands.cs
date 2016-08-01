@@ -23,28 +23,34 @@ namespace DatabaseApplication
     {
         public override void Execute()
         {
+            string res = string.Empty;
             switch (this.Model.ToLower())
             {
                 case pages:
                     var page = Utils.ParseJson<Page>(this.Json);
                     this.connection.Pages.Add(page);
-                    System.Console.WriteLine("Page ID:"+this.connection.Pages.Last().PageId);
+                    this.connection.SaveChanges();
+                    res = "Page ID:" + this.connection.Pages.Last().PageId;
+
 
                     break;
                 case navlinks:
                     var nav = Utils.ParseJson<NavLink>(this.Json);
                     this.connection.NavLinks.Add(nav);
-                    System.Console.WriteLine(" NavLink:"+this.connection.NavLinks.Last().NavLinkId);
-                    
+                    this.connection.SaveChanges();
+                    res = " NavLink:" + this.connection.NavLinks.Last().NavLinkId;
+
                     break;
                 case relatedpages:
                     var relpages = Utils.ParseJson<RelatedPage>(this.Json);
                     this.connection.RelatedPages.Add(relpages);
-                    System.Console.WriteLine("relatedpages :"+this.connection.RelatedPages.Last());
+                    this.connection.SaveChanges();
+                    res = "relatedpages :" + this.connection.RelatedPages.Last();
                     break;
                 default:
                     throw new InvalidOperationException("no such database  in list [page,navlink,relatedpages]");
             }
+            System.Console.WriteLine(res);
 
 
         }
@@ -95,14 +101,14 @@ namespace DatabaseApplication
                     break;
                 case relatedpages:
                     RelatedPage relpage = Utils.ParseJson<RelatedPage>(this.Json);
-                    var relPageDb = this.connection.RelatedPages.Single(p => p.Page1Id == this.ID||p.Page2Id==this.ID);
-                    if (relpage.Page1Id!=0)
+                    var relPageDb = this.connection.RelatedPages.Single(p => p.Page1Id == this.ID || p.Page2Id == this.ID);
+                    if (relpage.Page1Id != 0)
                     {
-                        relPageDb.Page1Id= relpage.Page1Id;
+                        relPageDb.Page1Id = relpage.Page1Id;
                     }
-                    if (relpage.Page2Id!=0)
+                    if (relpage.Page2Id != 0)
                     {
-                        relPageDb.Page2Id= relpage.Page2Id;
+                        relPageDb.Page2Id = relpage.Page2Id;
                     }
                     break;
                 default:
@@ -149,7 +155,7 @@ namespace DatabaseApplication
                     PrintPages();
                     break;
                 case navlinks:
-                PrintNavLinks();
+                    PrintNavLinks();
                     break;
                 case relatedpages:
                     PrintRelpages();
@@ -171,17 +177,20 @@ namespace DatabaseApplication
             Print(this.connection.Pages.ToList());
 
         }
-        public void PrintNavLinks(){
+        public void PrintNavLinks()
+        {
             System.Console.WriteLine("Navigation links:");
-                    Print(this.connection.NavLinks.ToList());
+            Print(this.connection.NavLinks.ToList());
 
         }
-        public void PrintRelpages(){
+        public void PrintRelpages()
+        {
             System.Console.WriteLine("RelatedPages :");
-                                Print(this.connection.RelatedPages.ToList());
+            Print(this.connection.RelatedPages.ToList());
         }
 
-        private void Print(IEnumerable l){
+        private void Print(IEnumerable l)
+        {
             foreach (var item in l)
             {
                 System.Console.WriteLine(l);
