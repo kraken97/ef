@@ -53,7 +53,7 @@ namespace task2.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "RelatedPages",
+                name: "RelatedPage",
                 columns: table => new
                 {
                     Page1Id = table.Column<int>(nullable: false),
@@ -61,15 +61,15 @@ namespace task2.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_RelatedPages", x => new { x.Page1Id, x.Page2Id });
+                    table.PrimaryKey("PK_RelatedPage", x => new { x.Page1Id, x.Page2Id });
                     table.ForeignKey(
-                        name: "FK_RelatedPages_Pages_Page1Id",
+                        name: "FK_RelatedPage_Pages_Page1Id",
                         column: x => x.Page1Id,
                         principalTable: "Pages",
                         principalColumn: "PageId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_RelatedPages_Pages_Page2Id",
+                        name: "FK_RelatedPage_Pages_Page2Id",
                         column: x => x.Page2Id,
                         principalTable: "Pages",
                         principalColumn: "PageId",
@@ -87,13 +87,13 @@ namespace task2.Migrations
                 column: "ParentLinkID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_RelatedPages_Page1Id",
-                table: "RelatedPages",
+                name: "IX_RelatedPage_Page1Id",
+                table: "RelatedPage",
                 column: "Page1Id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_RelatedPages_Page2Id",
-                table: "RelatedPages",
+                name: "IX_RelatedPage_Page2Id",
+                table: "RelatedPage",
                 column: "Page2Id");
         }
 
@@ -103,7 +103,7 @@ namespace task2.Migrations
                 name: "NavLinks");
 
             migrationBuilder.DropTable(
-                name: "RelatedPages");
+                name: "RelatedPage");
 
             migrationBuilder.DropTable(
                 name: "Pages");

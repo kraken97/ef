@@ -8,7 +8,7 @@ using DatabaseApplication;
 namespace task2.Migrations
 {
     [DbContext(typeof(SqliteDbContext))]
-    [Migration("20160730220623_initial")]
+    [Migration("20160801100237_initial")]
     partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -76,7 +76,7 @@ namespace task2.Migrations
 
                     b.HasIndex("Page2Id");
 
-                    b.ToTable("RelatedPages");
+                    b.ToTable("RelatedPage");
                 });
 
             modelBuilder.Entity("DatabaseApplication.NavLink", b =>

@@ -71,7 +71,8 @@ namespace DatabaseApplication
     }
     class Utils
     {
-        public static T ParseJson<T>(string json) where T : class
+        public static T ParseJson<
+        T>(string json) where T : class
         {
             return Newtonsoft.Json.JsonConvert.DeserializeObject<T>(json);
         }
@@ -83,7 +84,7 @@ namespace DatabaseApplication
         SqliteDbContext context;
         public ConsoleApplication(SqliteDbContext c)
         {
-            this.context=c;
+            this.context = c;
 
         }
         public void ReadCommandAndExecute()
@@ -92,6 +93,11 @@ namespace DatabaseApplication
             c.connection = this.context;
             c.Execute();
         }
+        public void PrepareDb(){
+        
+          this.context.Database.Migrate();
+        }
+
         private string _argsValidation = @"(((?<command>add)\s+(?<model>\w+)\s+(?<json>{.*}))|((?<command>update)\s+(?<model>\w+)\s+(?<id>[0-9]{1,5}){1}\s+(?<json>{.*}))|((?<command>delete)\s+(?<model>\w+)\s+(?<id>[0-9]{1,5}))|((?<command>list)\s+(?<model>\w+)\s*))";
         public Command ReadUserInput()
         {
@@ -152,29 +158,27 @@ namespace DatabaseApplication
 
         }
     }
+
     public class Program
     {
 
         public static void Main(string[] args)
         {
-
-
-
-
             using (SqliteDbContext s = new SqliteDbContext())
             {
+            
                 string res = string.Empty;
                 ConsoleApplication c = new ConsoleApplication(s);
+                c.PrepareDb();
                 while (true)
                 {
-                    if (string.IsNullOrEmpty(res)&&"no".Equals(res))
+                    if (string.IsNullOrEmpty(res) && "no".Equals(res))
                     {
                         System.Console.WriteLine("Good bye");
                         break;
                     }
                     try
                     {
-
                         c.ReadCommandAndExecute();
                         s.SaveChanges();
                         System.Console.WriteLine("changes is saved");
@@ -182,8 +186,7 @@ namespace DatabaseApplication
                     //dont sure what i should do in this case catch error  and print error msg without programm closing or close programm with stacktrace 
                     catch (System.Exception ex)
                     {
-                    System.Console.WriteLine(@"error occurs ");
-
+                        System.Console.WriteLine(@"error occurs ");
                         throw ex;
                     }
                     System.Console.WriteLine(@"Do your want countinue ? 

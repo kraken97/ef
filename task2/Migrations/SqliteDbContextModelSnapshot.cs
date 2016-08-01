@@ -75,7 +75,7 @@ namespace task2.Migrations
 
                     b.HasIndex("Page2Id");
 
-                    b.ToTable("RelatedPages");
+                    b.ToTable("RelatedPage");
                 });
 
             modelBuilder.Entity("DatabaseApplication.NavLink", b =>

@@ -8,7 +8,7 @@ namespace DatabaseApplication
     abstract class Command
     {
         public SqliteDbContext connection;
-        public int? ID { get; set; }
+        public int ID { get; set; }
         public string Model { get; set; }
         public string Json { get; set; }
 
@@ -92,7 +92,16 @@ namespace DatabaseApplication
                     }
                     break;
                 case relatedpages:
-                    // var relpages=Utils.ParseJson<RelatedPage>()
+                    RelatedPage relpage = Utils.ParseJson<RelatedPage>(this.Json);
+                    var relPageDb = this.connection.RelatedPages.Single(p => p.Page1Id == this.ID||p.Page2Id==this.ID);
+                    if (relpage.Page1Id!=0)
+                    {
+                        relPageDb.Page1Id= relpage.Page1Id;
+                    }
+                    if (relpage.Page2Id!=0)
+                    {
+                        relPageDb.Page2Id= relpage.Page2Id;
+                    }
                     break;
                 default:
                     throw new InvalidOperationException("no such database  in list [page,navlink,relatedpages]");
@@ -135,7 +144,7 @@ namespace DatabaseApplication
             switch (this.Model.ToLower())
             {
                 case pages:
-                PrintPages();
+                    PrintPages();
                     break;
                 case navlinks:
                 PrintNavLinks();
