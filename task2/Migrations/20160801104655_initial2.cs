@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace task2.Migrations
 {
-    public partial class initial : Migration
+    public partial class initial2 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -30,9 +30,9 @@ namespace task2.Migrations
                 {
                     NavLinkId = table.Column<int>(nullable: false)
                         .Annotation("Autoincrement", true),
-                    PageId = table.Column<int>(nullable: false),
-                    ParentLinkID = table.Column<int>(nullable: false),
-                    Position = table.Column<int>(nullable: false),
+                    PageId = table.Column<int>(nullable: true),
+                    ParentLinkID = table.Column<int>(nullable: true),
+                    Position = table.Column<int>(nullable: true),
                     Title = table.Column<string>(maxLength: 500, nullable: false)
                 },
                 constraints: table =>
@@ -43,17 +43,17 @@ namespace task2.Migrations
                         column: x => x.PageId,
                         principalTable: "Pages",
                         principalColumn: "PageId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_NavLinks_NavLinks_ParentLinkID",
                         column: x => x.ParentLinkID,
                         principalTable: "NavLinks",
                         principalColumn: "NavLinkId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
-                name: "RelatedPage",
+                name: "RelatedPages",
                 columns: table => new
                 {
                     Page1Id = table.Column<int>(nullable: false),
@@ -61,15 +61,15 @@ namespace task2.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_RelatedPage", x => new { x.Page1Id, x.Page2Id });
+                    table.PrimaryKey("PK_RelatedPages", x => new { x.Page1Id, x.Page2Id });
                     table.ForeignKey(
-                        name: "FK_RelatedPage_Pages_Page1Id",
+                        name: "FK_RelatedPages_Pages_Page1Id",
                         column: x => x.Page1Id,
                         principalTable: "Pages",
                         principalColumn: "PageId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_RelatedPage_Pages_Page2Id",
+                        name: "FK_RelatedPages_Pages_Page2Id",
                         column: x => x.Page2Id,
                         principalTable: "Pages",
                         principalColumn: "PageId",
@@ -87,13 +87,19 @@ namespace task2.Migrations
                 column: "ParentLinkID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_RelatedPage_Page1Id",
-                table: "RelatedPage",
+                name: "IX_NavLinks_Position",
+                table: "NavLinks",
+                column: "Position",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RelatedPages_Page1Id",
+                table: "RelatedPages",
                 column: "Page1Id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_RelatedPage_Page2Id",
-                table: "RelatedPage",
+                name: "IX_RelatedPages_Page2Id",
+                table: "RelatedPages",
                 column: "Page2Id");
         }
 
@@ -103,7 +109,7 @@ namespace task2.Migrations
                 name: "NavLinks");
 
             migrationBuilder.DropTable(
-                name: "RelatedPage");
+                name: "RelatedPages");
 
             migrationBuilder.DropTable(
                 name: "Pages");

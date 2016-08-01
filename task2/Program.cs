@@ -22,6 +22,9 @@ namespace DatabaseApplication
 
         public string Content { get; set; }
         public DateTime AddedDate { get; set; }
+    public override string ToString(){
+       return $"PageID: {PageId}  UrlName: {UrlName} Description: {Description}  Content:{Content}  AddedDate: {AddedDate} ";
+    }
     }
     class NavLink
     {
@@ -30,13 +33,16 @@ namespace DatabaseApplication
         [MaxLength(500)]
         public string Title { get; set; }
 
-        public int ParentLinkID { get; set; }
+        public int? ParentLinkID { get; set; }
         [ForeignKey("ParentLinkID")]
         public NavLink ParentLink { get; set; }
-        public int PageId { get; set; }
+        public int? PageId { get; set; }
         [ForeignKey("PageId")]
         public Page Page { get; set; }
-        public int Position { get; set; }
+        public int? Position { get; set; }
+        public override string ToString(){
+            return $"NavLink: {NavLinkId} Title: {Title} ParentLinkID: {ParentLinkID}  PageID: {PageId}  Position: {Position}";
+        }
 
     }
     class RelatedPage
@@ -47,6 +53,9 @@ namespace DatabaseApplication
         public int Page2Id { get; set; }
         [ForeignKey("Page2Id")]
         public Page Page2 { get; set; }
+        public override string ToString(){
+            return $"Page1ID: { Page1Id} Page2Id: {Page2Id}";
+        }
     }
     class SqliteDbContext : DbContext
     {
@@ -64,6 +73,7 @@ namespace DatabaseApplication
         }
         protected override void OnModelCreating(ModelBuilder mb)
         {
+            mb.Entity<NavLink>().HasIndex(link=>link.Page).IsUnique();
             mb.Entity<Page>().Property(e => e.AddedDate).HasDefaultValueSql("strftime('%Y-%m-%d %H:%M:%S')").ValueGeneratedOnAdd();
             mb.Entity<RelatedPage>().HasKey(r => new { r.Page1Id, r.Page2Id });
 

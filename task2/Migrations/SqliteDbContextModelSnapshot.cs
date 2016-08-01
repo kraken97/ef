@@ -20,11 +20,11 @@ namespace task2.Migrations
                     b.Property<int>("NavLinkId")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int>("PageId");
+                    b.Property<int?>("PageId");
 
-                    b.Property<int>("ParentLinkID");
+                    b.Property<int?>("ParentLinkID");
 
-                    b.Property<int>("Position");
+                    b.Property<int?>("Position");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -35,6 +35,9 @@ namespace task2.Migrations
                     b.HasIndex("PageId");
 
                     b.HasIndex("ParentLinkID");
+
+                    b.HasIndex("Position")
+                        .IsUnique();
 
                     b.ToTable("NavLinks");
                 });
@@ -75,20 +78,18 @@ namespace task2.Migrations
 
                     b.HasIndex("Page2Id");
 
-                    b.ToTable("RelatedPage");
+                    b.ToTable("RelatedPages");
                 });
 
             modelBuilder.Entity("DatabaseApplication.NavLink", b =>
                 {
                     b.HasOne("DatabaseApplication.Page", "Page")
                         .WithMany()
-                        .HasForeignKey("PageId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("PageId");
 
                     b.HasOne("DatabaseApplication.NavLink", "ParentLink")
                         .WithMany()
-                        .HasForeignKey("ParentLinkID")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("ParentLinkID");
                 });
 
             modelBuilder.Entity("DatabaseApplication.RelatedPage", b =>

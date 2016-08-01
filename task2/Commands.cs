@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 namespace DatabaseApplication
 {
@@ -74,11 +76,11 @@ namespace DatabaseApplication
                 case navlinks:
                     NavLink nav = Utils.ParseJson<NavLink>(this.Json);
                     var navLinkDb = this.connection.NavLinks.Single(p => p.NavLinkId == this.ID);
-                    if (nav.PageId != 0)
+                    if (nav.PageId != null)
                     {
                         navLinkDb.PageId = nav.PageId;
                     }
-                    if (nav.ParentLinkID != 0)
+                    if (nav.ParentLinkID != null)
                     {
                         navLinkDb.ParentLinkID = nav.ParentLinkID;
                     }
@@ -166,17 +168,25 @@ namespace DatabaseApplication
         public void PrintPages()
         {
             System.Console.WriteLine("Pages:");
-            this.connection.Pages.ToList().ForEach(res => System.Console.WriteLine($"PageID: {res.PageId}  UrlName: {res.UrlName} Description: {res.Description}  Content:{res.Content}  AddedDate: {res.AddedDate} "));
+            Print(this.connection.Pages.ToList());
 
         }
         public void PrintNavLinks(){
             System.Console.WriteLine("Navigation links:");
-                    this.connection.NavLinks.ToList().ForEach(res => System.Console.WriteLine($"NavLink: {res.NavLinkId} Title: {res.Title} ParentLinkID: {res.ParentLinkID}  PageID: {res.PageId}  Position: {res.Position}"));
+                    Print(this.connection.NavLinks.ToList());
 
         }
         public void PrintRelpages(){
             System.Console.WriteLine("RelatedPages :");
-                                this.connection.RelatedPages.ToList().ForEach(res => System.Console.WriteLine($"Page1ID: { res.Page1Id} Page2Id: {res.Page2Id}"));
+                                Print(this.connection.RelatedPages.ToList());
+        }
+
+        private void Print(IEnumerable l){
+            foreach (var item in l)
+            {
+                System.Console.WriteLine(l);
+            }
+
         }
     }
 }
