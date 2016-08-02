@@ -181,7 +181,7 @@ namespace DatabaseApplication
                 c.PrepareDb();
                 while (true)
                 {
-                    if (string.IsNullOrEmpty(res) && "no".Equals(res))
+                    if (!string.IsNullOrEmpty(res) && "no".Equals(res))
                     {
                         System.Console.WriteLine("Good bye");
                         break;
