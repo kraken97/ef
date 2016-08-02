@@ -33,6 +33,7 @@ namespace DatabaseApplication
                     res = "Page ID:" + this.connection.Pages.Last().PageId;
 
 
+
                     break;
                 case navlinks:
                     var nav = Utils.ParseJson<NavLink>(this.Json);
