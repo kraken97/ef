@@ -8,8 +8,8 @@ using DatabaseApplication;
 namespace task2.Migrations
 {
     [DbContext(typeof(SqliteDbContext))]
-    [Migration("20160801104655_initial2")]
-    partial class initial2
+    [Migration("20160803101910_initial")]
+    partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -36,9 +36,6 @@ namespace task2.Migrations
                     b.HasIndex("PageId");
 
                     b.HasIndex("ParentLinkID");
-
-                    b.HasIndex("Position")
-                        .IsUnique();
 
                     b.ToTable("NavLinks");
                 });
@@ -69,11 +66,14 @@ namespace task2.Migrations
 
             modelBuilder.Entity("DatabaseApplication.RelatedPage", b =>
                 {
-                    b.Property<int>("Page1Id");
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd();
 
-                    b.Property<int>("Page2Id");
+                    b.Property<int?>("Page1Id");
 
-                    b.HasKey("Page1Id", "Page2Id");
+                    b.Property<int?>("Page2Id");
+
+                    b.HasKey("ID");
 
                     b.HasIndex("Page1Id");
 
@@ -96,14 +96,12 @@ namespace task2.Migrations
             modelBuilder.Entity("DatabaseApplication.RelatedPage", b =>
                 {
                     b.HasOne("DatabaseApplication.Page", "Page1")
-                        .WithMany()
-                        .HasForeignKey("Page1Id")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .WithMany("RelPages1")
+                        .HasForeignKey("Page1Id");
 
                     b.HasOne("DatabaseApplication.Page", "Page2")
-                        .WithMany()
-                        .HasForeignKey("Page2Id")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .WithMany("RelPages2")
+                        .HasForeignKey("Page2Id");
                 });
         }
     }

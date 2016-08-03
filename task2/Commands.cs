@@ -44,6 +44,7 @@ namespace DatabaseApplication
                     break;
                 case relatedpages:
                     var relpages = Utils.ParseJson<RelatedPage>(this.Json);
+                    System.Console.WriteLine(relpages);
                     this.connection.RelatedPages.Add(relpages);
                     this.connection.SaveChanges();
                     res = "relatedpages :" + this.connection.RelatedPages.Last();
@@ -102,12 +103,12 @@ namespace DatabaseApplication
                     break;
                 case relatedpages:
                     RelatedPage relpage = Utils.ParseJson<RelatedPage>(this.Json);
-                    var relPageDb = this.connection.RelatedPages.Single(p => p.Page1Id == this.ID || p.Page2Id == this.ID);
-                    if (relpage.Page1Id != 0)
+                    var relPageDb = this.connection.RelatedPages.Single(p => p.ID== this.ID);
+                    if (relpage.Page1Id != null)
                     {
                         relPageDb.Page1Id = relpage.Page1Id;
                     }
-                    if (relpage.Page2Id != 0)
+                    if (relpage.Page2Id != null)
                     {
                         relPageDb.Page2Id = relpage.Page2Id;
                     }
@@ -135,8 +136,7 @@ namespace DatabaseApplication
                     this.connection.NavLinks.Remove(resNav);
                     break;
                 case relatedpages:
-                    System.Console.WriteLine("deleting row using page id ( if one page's id is equals then this row will be delete)");
-                    var resRel = this.connection.RelatedPages.Single(m => m.Page1Id == this.ID || m.Page2Id == this.ID);
+                    var resRel = this.connection.RelatedPages.Single(m => m.ID == this.ID);
                     this.connection.RelatedPages.Remove(resRel);
                     break;
                 default:

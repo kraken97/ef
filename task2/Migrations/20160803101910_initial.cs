@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace task2.Migrations
 {
-    public partial class initial2 : Migration
+    public partial class initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -56,24 +56,26 @@ namespace task2.Migrations
                 name: "RelatedPages",
                 columns: table => new
                 {
-                    Page1Id = table.Column<int>(nullable: false),
-                    Page2Id = table.Column<int>(nullable: false)
+                    ID = table.Column<int>(nullable: false)
+                        .Annotation("Autoincrement", true),
+                    Page1Id = table.Column<int>(nullable: true),
+                    Page2Id = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_RelatedPages", x => new { x.Page1Id, x.Page2Id });
+                    table.PrimaryKey("PK_RelatedPages", x => x.ID);
                     table.ForeignKey(
                         name: "FK_RelatedPages_Pages_Page1Id",
                         column: x => x.Page1Id,
                         principalTable: "Pages",
                         principalColumn: "PageId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_RelatedPages_Pages_Page2Id",
                         column: x => x.Page2Id,
                         principalTable: "Pages",
                         principalColumn: "PageId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
@@ -85,12 +87,6 @@ namespace task2.Migrations
                 name: "IX_NavLinks_ParentLinkID",
                 table: "NavLinks",
                 column: "ParentLinkID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_NavLinks_Position",
-                table: "NavLinks",
-                column: "Position",
-                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_RelatedPages_Page1Id",

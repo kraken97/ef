@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.RegularExpressions;
+using System.Collections.Generic;
 
 
 
@@ -22,11 +23,14 @@ namespace DatabaseApplication
 
         public string Content { get; set; }
         public DateTime AddedDate { get; set; }
-    public override string ToString(){
-       return $"PageID: {PageId}  UrlName: {UrlName} Description: {Description}  Content:{Content}  AddedDate: {AddedDate} ";
+        public ICollection<RelatedPage> RelPages1 { get; set; }
+        public ICollection<RelatedPage> RelPages2 { get; set; }
+        public override string ToString()
+        {
+            return $"PageID: {PageId}  UrlName: {UrlName} Description: {Description}  Content:{Content}  AddedDate: {AddedDate} ";
+        }
     }
-    }
-    class NavLink
+    public class NavLink
     {
         public int NavLinkId { get; set; }
         [Required]
@@ -40,20 +44,23 @@ namespace DatabaseApplication
         [ForeignKey("PageId")]
         public Page Page { get; set; }
         public int? Position { get; set; }
-        public override string ToString(){
+        public override string ToString()
+        {
             return $"NavLink: {NavLinkId} Title: {Title} ParentLinkID: {ParentLinkID}  PageID: {PageId}  Position: {Position}";
         }
 
     }
-    class RelatedPage
+    public class RelatedPage
     {
-        public int Page1Id { get; set; }
-        [ForeignKey("Page1Id")]
+        public int ID { get; set; }
+        public int? Page1Id { get; set; }
+        [ForeignKeyAttribute("Page1Id")]        
         public Page Page1 { get; set; }
-        public int Page2Id { get; set; }
-        [ForeignKey("Page2Id")]
+        public int? Page2Id { get; set; }
+        [ForeignKeyAttribute("Page2Id")]                
         public Page Page2 { get; set; }
-        public override string ToString(){
+        public override string ToString()
+        {
             return $"Page1ID: { Page1Id} Page2Id: {Page2Id}";
         }
     }
@@ -74,7 +81,9 @@ namespace DatabaseApplication
         protected override void OnModelCreating(ModelBuilder mb)
         {
             mb.Entity<Page>().Property(e => e.AddedDate).HasDefaultValueSql("strftime('%Y-%m-%d %H:%M:%S')").ValueGeneratedOnAdd();
-            mb.Entity<RelatedPage>().HasKey(r => new { r.Page1Id, r.Page2Id });
+            mb.Entity<RelatedPage>().HasOne(x => x.Page1).WithMany(x => x.RelPages1).HasForeignKey(x => x.Page1Id);
+            mb.Entity<RelatedPage>().HasOne(x => x.Page2).WithMany(x => x.RelPages2).HasForeignKey(x => x.Page2Id);
+            //   mb.Entity<RelatedPage>().HasKey(r => new { r.Page1Id, r.Page2Id });
 
         }
     }
@@ -102,9 +111,10 @@ namespace DatabaseApplication
             c.connection = this.context;
             c.Execute();
         }
-        public void PrepareDb(){
-        
-          this.context.Database.Migrate();
+        public void PrepareDb()
+        {
+
+            this.context.Database.Migrate();
         }
 
         private string _argsValidation = @"(((?<command>add)\s+(?<model>\w+)\s+(?<json>{.*}))|((?<command>update)\s+(?<model>\w+)\s+(?<id>[0-9]{1,5}){1}\s+(?<json>{.*}))|((?<command>delete)\s+(?<model>\w+)\s+(?<id>[0-9]{1,5}))|((?<command>list)\s+(?<model>\w+)\s*))";
@@ -175,7 +185,7 @@ namespace DatabaseApplication
         {
             using (SqliteDbContext s = new SqliteDbContext())
             {
-            
+
                 string res = string.Empty;
                 ConsoleApplication c = new ConsoleApplication(s);
                 c.PrepareDb();
